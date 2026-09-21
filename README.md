@@ -1,5 +1,7 @@
 # ZCode 多机面板（zcode-hub）
 
+> <https://github.com/freedomNTD/zcode-hub>
+
 一个跑在你自己电脑上的小服务 + 手机网页，用来**扫码配对多台 ZCode，并在一个页面里统一管理**。
 
 ## 它解决什么问题
@@ -14,6 +16,12 @@ ZCode 自带「手机远控 / Web 远程控制」：桌面端显示一个二维�
 - 一键**打开任意一台的官方控制台**（对话、执行等操作仍走官方页面，功能完整）
 
 ## 快速开始
+
+```bash
+git clone https://github.com/freedomNTD/zcode-hub.git
+cd zcode-hub
+```
+
 
 1. 需要 Node 22 或更高（用到内置 WebSocket）。本机 `node -v` 是 v24，满足。
 2. 双击 `start.cmd`，或者命令行运行：
