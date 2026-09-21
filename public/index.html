@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f1115" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <title>ZCode 多机面板</title>
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+  <link rel="icon" href="./icon-192.png" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <span class="logo">Z</span>
+      <div>
+        <h1>ZCode 多机面板</h1>
+        <p id="subtitle">扫码配对你的 ZCode，一台手机管理多台机器</p>
+      </div>
+    </div>
+    <button id="btnRefreshAll" class="ghost">刷新全部</button>
+  </header>
+
+  <main>
+    <section id="setup" class="setup hidden">
+      <h2>需要访问令牌</h2>
+      <p>请在运行 zcode-hub 的电脑终端里复制带令牌的完整地址，或用下面输入框粘贴令牌。</p>
+      <input id="tokenInput" type="text" placeholder="粘贴令牌或完整地址" autocomplete="off" />
+      <button id="btnSaveToken" class="primary">保存</button>
+    </section>
+
+    <section id="panel" class="hidden">
+      <div class="actions">
+        <button id="btnScan" class="primary">扫码添加</button>
+        <button id="btnImport" class="ghost">导入本机</button>
+        <button id="btnPaste" class="ghost">粘贴链接</button>
+        <button id="btnShowQr" class="ghost">本页二维码</button>
+        <button id="btnApk" class="ghost hidden">下载安卓 App</button>
+        <button id="btnAppSettings" class="ghost hidden">改面板地址</button>
+      </div>
+
+      <div id="hint" class="hint">
+        <strong>怎么配对：</strong>在 ZCode 桌面端打开「手机远控 / Web 远程控制」，屏幕上会出现二维码，
+        用上面的「扫码添加」拍一下即可。多台机器重复这个步骤，之后都在这一个页面里管理。
+      </div>
+
+      <div id="devices" class="devices"></div>
+      <p id="empty" class="empty">还没有设备，先点「扫码添加」或「导入本机」。</p>
+    </section>
+  </main>
+
+  <dialog id="scanDlg" class="sheet">
+    <h2>扫码 / 拍照识别</h2>
+    <div class="video-wrap">
+      <video id="video" playsinline muted></video>
+      <canvas id="scanCanvas" class="hidden"></canvas>
+    </div>
+    <p id="scanTip" class="tip">把 ZCode 的配对二维码放进取景框</p>
+    <div class="row">
+      <label class="primary file-btn">
+        拍照识别
+        <input id="fileInput" type="file" accept="image/*" capture="environment" hidden />
+      </label>
+      <button id="btnScanClose" class="ghost">关闭</button>
+    </div>
+  </dialog>
+
+  <dialog id="pasteDlg" class="sheet">
+    <h2>粘贴配对链接</h2>
+    <textarea id="pasteInput" rows="4" placeholder="https://zcode.z.ai/remote/v4?sid=...&hash=..."></textarea>
+    <div class="row">
+      <button id="btnPasteOk" class="primary">添加</button>
+      <button id="btnPasteCancel" class="ghost">取消</button>
+    </div>
+  </dialog>
+
+  <dialog id="qrDlg" class="sheet">
+    <h2>用手机扫这个码打开面板</h2>
+    <div id="qrBox" class="qr-box"></div>
+    <p class="tip" id="qrUrl"></p>
+    <div class="row"><button id="btnQrClose" class="ghost">关闭</button></div>
+  </dialog>
+
+  <script src="./jsQR.js"></script>
+  <script src="./qrcode.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+# 运行时生成：里面有配对密钥（passHash）和面板访问令牌，绝对不能提交
+data/
+
+# 本地自签证书的私钥
+certs/
+
+# APK 签名私钥
+android-app/keystore/
+
+# 构建产物
+android-app/dist/
+android-app/build/
+public/zcode-hub.apk
+
+# 第三方二进制（构建脚本会自动下载）
+android-app/libs/*.jar
+tools/bin/
+
+node_modules/
+*.log
+.DS_Store
+Thumbs.db

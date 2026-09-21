@@ -1,0 +1,14 @@
+{
+  "name": "zcode-hub",
+  "version": "0.1.0",
+  "private": true,
+  "description": "扫码配对你的 ZCode 桌面端，在手机上统一管理多台机器的远控面板",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node server.mjs",
+    "test:handshake": "node test/handshake.mjs"
+  }
+}
