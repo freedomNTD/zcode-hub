@@ -41,6 +41,7 @@ import java.util.concurrent.TimeUnit;
 public class MainActivity extends Activity {
 
     private static final int REQ_SCAN = 4001;
+    private static final int REQ_GALLERY = 4002;
     private static final long STATUS_TIMEOUT_MS = 12000;
     private static final long WAITING_GRACE_MS = 3000;
 
@@ -348,7 +349,7 @@ public class MainActivity extends Activity {
     /* ---------------- 添加设备 ---------------- */
 
     private void showAddDialog() {
-        final String[] items = new String[]{"扫码（打开摄像头）", "粘贴配对链接"};
+        final String[] items = new String[]{"扫码（打开摄像头）", "从相册选二维码", "粘贴配对链接"};
         new AlertDialog.Builder(this)
                 .setTitle("添加一台 ZCode")
                 .setItems(items, new DialogInterface.OnClickListener() {
@@ -356,6 +357,8 @@ public class MainActivity extends Activity {
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == 0) {
                             startActivityForResult(new Intent(MainActivity.this, ScanActivity.class), REQ_SCAN);
+                        } else if (which == 1) {
+                            pickImage();
                         } else {
                             pasteLinkDialog();
                         }
@@ -363,6 +366,18 @@ public class MainActivity extends Activity {
                 })
                 .setNegativeButton("取消", null)
                 .show();
+    }
+
+    /** 从相册/文件里选一张二维码图片来识别（不需要存储权限） */
+    private void pickImage() {
+        try {
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            intent.setType("image/*");
+            startActivityForResult(Intent.createChooser(intent, "选择二维码图片"), REQ_GALLERY);
+        } catch (Exception e) {
+            Toast.makeText(this, "打不开图库：" + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 
     private void pasteLinkDialog() {
@@ -400,6 +415,31 @@ public class MainActivity extends Activity {
             if (resultCode == RESULT_OK && data != null) {
                 String qr = data.getStringExtra(ScanActivity.EXTRA_QR);
                 if (qr != null) addByLink(qr);
+            }
+            return;
+        }
+        if (requestCode == REQ_GALLERY) {
+            if (resultCode == RESULT_OK && data != null && data.getData() != null) {
+                final android.net.Uri uri = data.getData();
+                statusText.setTextColor(C_MUTED);
+                statusText.setText("正在识别图片里的二维码…");
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        final String qr = QrImages.decode(MainActivity.this, uri);
+                        ui.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (qr == null) {
+                                    statusText.setTextColor(C_ERR);
+                                    statusText.setText("这张图里没识别出二维码。尽量用屏幕直拍的清晰原图。");
+                                } else {
+                                    addByLink(qr);
+                                }
+                            }
+                        });
+                    }
+                }).start();
             }
             return;
         }

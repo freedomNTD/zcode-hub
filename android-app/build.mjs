@@ -22,7 +22,7 @@ const keytool = path.join(JDK, 'bin', 'keytool.exe');
 const java = path.join(JDK, 'bin', 'java.exe');
 
 const APP_ID = 'com.zcodehub.app';
-const VERSION = '0.1.0';
+const VERSION = '0.2.0';
 const VERSION_CODE = '1';
 const KS = path.join(here, 'keystore', 'zcode-hub.jks');
 const KS_PASS = 'zcodehub';
